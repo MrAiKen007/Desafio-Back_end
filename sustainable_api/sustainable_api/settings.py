@@ -21,6 +21,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'acoes',
+    'rest_framework.authtoken',
+
 ]
 
 MIDDLEWARE = [
@@ -43,7 +45,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',  # Necessário para o drf-yasg
+                'django.template.context_processors.request', 
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -80,9 +82,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Configuração do Django REST Framework com JWT
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
 }
+
