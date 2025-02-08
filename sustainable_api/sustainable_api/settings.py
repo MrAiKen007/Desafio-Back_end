@@ -53,7 +53,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sustainable_api.wsgi.application'
 
-# Configuração do PostgreSQL – substitua pelos dados do seu banco
 tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
 
 DATABASES = {
@@ -66,6 +65,7 @@ DATABASES = {
         'PORT': 5432,
     }
 }
+
 AUTH_PASSWORD_VALIDATORS = [
     { 'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
     { 'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', },
