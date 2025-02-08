@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Sustentabilidade em Ação</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Sustentabilidade em Ação</h1>
+        <h2>Cadastrar Nova Ação</h2>
+        <form id="acaoForm">
+            <div class="mb-3">
+                <label for="title" class="form-label">Título</label>
+                <input type="text" class="form-control" id="title" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Descrição</label>
+                <textarea class="form-control" id="description" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="category" class="form-label">Categoria</label>
+                <select id="category" class="form-select" required>
+                    <option value="Reciclagem">Reciclagem</option>
+                    <option value="Energia">Energia</option>
+                    <option value="Água">Água</option>
+                    <option value="Mobilidade">Mobilidade</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="points" class="form-label">Pontos</label>
+                <input type="number" class="form-control" id="points" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Cadastrar Ação</button>
+        </form>
+
+        <h2 class="mt-5">Ações Cadastradas</h2>
+        <div id="acoesList"></div>
+    </div>
+
+    <script>
+        // URL base da API (ajuste conforme sua configuração)
+        const API_BASE_URL = '/api/acoes/';
+
+        // Função placeholder para obter o token JWT.
+        // Implemente a lógica de login ou armazene o token após a autenticação.
+        async function getToken() {
+            // Exemplo: realizar fetch para '/api/auth/login/' e retornar o token
+            return 'seu-token-jwt-aqui'; // ATENÇÃO: Substitua por um token válido!
+        }
+
+        async function fetchAcoes() {
+            const token = await getToken();
+            const response = await fetch(API_BASE_URL, {
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json();
+            return data;
+        }
+
+        async function createAcao(acao) {
+            const token = await getToken();
+            const response = await fetch(API_BASE_URL, {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(acao)
+            });
+            const data = await response.json();
+            return data;
+        }
+
+        document.getElementById('acaoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const acao = {
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                category: document.getElementById('category').value,
+                points: parseInt(document.getElementById('points').value),
+            };
+            const result = await createAcao(acao);
+            console.log(result);
+            // Atualiza a lista de ações após o cadastro
+            loadAcoes();
+        });
+
+        async function loadAcoes() {
+            const acoesList = document.getElementById('acoesList');
+            const acoes = await fetchAcoes();
+            acoesList.innerHTML = '';
+            acoes.forEach(acao => {
+                const div = document.createElement('div');
+                div.innerHTML = `<strong>${acao.title}</strong> - ${acao.description} (${acao.category}) - ${acao.points} pontos`;
+                acoesList.appendChild(div);
+            });
+        }
+
+        // Carrega as ações ao abrir a página
+        loadAcoes();
+    </script>
+</body>
+</html>
